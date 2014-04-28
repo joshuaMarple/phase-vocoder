@@ -1,8 +1,8 @@
-
-from lib import pydub
 from app import insertSpaces
 from app import pitchMod
 from app import soundMod
+from app import changePitch
+from app import loadGrid
 
 class Sound:
     def __init__(self, soundPath, textgridPath):
