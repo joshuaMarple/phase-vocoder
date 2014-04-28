@@ -1,30 +1,54 @@
 import subprocess
 import os
 from sys import platform as _platform
+from lib import pydub
 
 def changePitch(filename,tones):
   """
-  Input: n
-  n (integer): the number to do the factorial function on
-  Returns: The value of n!
-  Description: This function will return n!
+  Input: filename , tones
+  filename (string): the path to the soundfile
+  tones (integer): the number of semitones to change(from negative number to positive number)
+  Outputs: pitchoutput.wav
+  Description: This function will change the pitch of a soundfile
   """
   pitchchange = "-pitch="+str(tones)
   if _platform == "linux" or _platform == "linux2":
-    fn = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'soundpitch')
+    fn = '..//lib//soundpitch'
   elif _platform == "darwin":
-    fn = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'soundpitchmac')
+    fn = '..//lib//soundpitchmac'
   elif _platform == "win32":
-    fn = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'soundpitchwin32.exe')
+    fn = '..//lib//soundpitchwin32.exe'
 
   subprocess.call([fn,filename, "pitchoutput.wav","-speech", pitchchange])
-  #self.nsound=SndTable("temp_outvoice.aif")
-  #self.nsound.save("outputfinal.wav", 0, 0)
-  #os.remove( os.path.join(os.path.abspath(os.path.dirname(__file__)), 'temp_outvoice.aif') )
-  #os.remove( os.path.join(os.path.abspath(os.path.dirname(__file__)), 'temp_voice.aif') )
-  #print fn
+  
+  return "pitchoutput.wav"
+  
+ 
+def changeGapPitch(filename,gaptime,gaplength,tones):
+  """
+  Input: filename , gaptime, gaplength , tones
+  filename (string): the path to the soundfile
+  gaptime (float): the time to begin changing the pitch
+  gaplength(float): the amount of sound to be changed(from the gaptime start to the end of this length)
+  tones (integer): the number of semitones to change(from negative number to positive number) 
+  Outputs: processefile.wav
+  Description: This function will change the pitch of a soundfile
+  """
+  file = pydub.AudioSegment.from_wav(filename)
+  newpitchpart = file[int((gaptime* 1000)) : int(((gaptime+gaplength) * 1000))]
+  first = file[:int(gaptime * 1000)]
+  last = file[int((gaptime+gaplength) * 1000):]
+  newpitchpart.export("pitchinput.wav", format="wav")
+  changePitch("pitchinput.wav",tones)
+  newpitchpart = pydub.AudioSegment.from_wav("pitchoutput.wav")
+  newfile = first + newpitchpart + last
+  newfile.export("processedfile.wav", format="wav")
+  
+  os.remove( os.path.join(os.path.abspath(os.path.dirname(__file__)), "pitchinput.wav") )
+  os.remove( os.path.join(os.path.abspath(os.path.dirname(__file__)), "pitchoutput.wav") )
+  
+  return newfile
 
-#changePitch("example.wav", 4)
 
 
 
