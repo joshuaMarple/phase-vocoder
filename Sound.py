@@ -2,7 +2,6 @@ from app import insertSpaces
 from app import pitchMod
 from app import soundMod
 from app import changePitch
-from app import loadGrid
 
 class Sound:
     def __init__(self, soundPath, textgridPath):
@@ -20,7 +19,7 @@ class Sound:
         silenceStart = wordIntervals[index].end_time
         
         # insert silence into wave
-        # insertSpaces.insertSilence(self.soundPath, silenceStart, duration)
+        insertSpaces.insertSilence(self.soundPath, silenceStart, duration)
         
         # insert silence into textgrid
         for tier in self.textgrid:
@@ -35,7 +34,7 @@ class Sound:
         tier.get_annotation_by_start_time(silenceStart).end_time += duration
 
         # Save grid
-        tgt.write_to_file(self.textgrid, "out.TextGrid", format = "long")
+        tgt.write_to_file(self.textgrid, self.textgrid, format = "long")
 
     def pitchMod(self, startTime, length, shift):
         '''
