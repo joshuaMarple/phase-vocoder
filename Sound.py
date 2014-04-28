@@ -1,7 +1,7 @@
 from app import insertSpaces
 from app import pitchMod
+from app import durMod
 from app import soundMod
-from app import changePitch
 
 class Sound:
     def __init__(self, soundPath, textgridPath):
@@ -37,12 +37,14 @@ class Sound:
         tgt.write_to_file(self.textgrid, self.textgrid, format = "long")
 
     def pitchMod(self, startTime, length, shift):
+       '''
+        Input: starTime,length,shift
+        startTime(Float): the beginning of the sound interval to have its pitch changed (in seconds)
+        length (float): the size of the interval to be changed (in seconds)
+        shift (integer): the amount of semitones to change the pitch (can be a positive number [to make pitch higher] or a negative number[to make pitch lower])
+        Description: Changes the pitch of a sound without changing its duration
         '''
-        We'll need to talk about what parameters to
-        pass this one. It will call pitchMod that is
-        defined in pitchMod.py
-        '''
-        changeGapPitch(self.soundPath, startTime, length, shift)
+        pitchMod.changeGapPitch(self.soundPath,startTime,length,shift)
 
     def intensityMod(self, startTime, length, decibels):
         '''
@@ -52,10 +54,13 @@ class Sound:
         '''
         pass
 
-    def durMod(self, soundIndex, newDuration):
+     def durMod(self, percentage):
         '''
-        We haven't talked about how to implement this one.
+        Input: percentage
+        percentage (integer) : Changes the tempo of a sound file based in a percentage where -50 % doubles the sound time and 50% half it
+        Description: Changes the duration of a sound file whithout changing the pitch
         '''
+        durMod.changeDuration(self.soundPath,percentage)
         pass
 
 if __name__ == "__main__":
