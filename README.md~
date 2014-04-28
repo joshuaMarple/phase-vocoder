@@ -29,12 +29,12 @@ Sound hard? Don’t worry, it won’t be. Most of our work will use the PYO Libr
 Similarly, there is a library called tgt that can be installed using pip. This library has a number of tools that will make it very easy to open up and use text grid files (the second part of that input). 
 
 So, in conclusion, we have a priority of tasks to accomplish.
--investigating each of these libraries and seeing how they work
--implementing file loading and changes in directories
--changing pitch of tones
--changing duration of tones
--inserting pauses
--changes in intensity
-
+investigating each of these libraries and seeing how they work
+implementing file loading and changes in directories
+changing pitch of tones
+changing duration of tones
+inserting pauses
+changes in intensity
 Our inputs will be a sound file and a text grid file.
 Our outputs will be a sound file, and a new modified text grid file.
+

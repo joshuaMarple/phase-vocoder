@@ -10,8 +10,8 @@ print("booted server")
 server.start()
 
 sound = pyo.SfPlayer(path).out()
-soundHigh = pyo.FreqShift(sound, shift = 1000)
-soundLow = pyo.FreqShift(sound, shift = -1000)
+soundHigh = pyo.FreqShift(sound, shift = 10)
+soundLow = pyo.FreqShift(sound, shift = -10)
 soundQuiet = sound * .6
 soundLoud = sound / .6
 rec = pyo.Record(sound, "test.wav")

@@ -1,7 +1,8 @@
-import tgt
-import insertSpaces
-import pitchMod
-import soundMod
+
+from lib import pydub
+from app import insertSpaces
+from app import pitchMod
+from app import soundMod
 
 class Sound:
     def __init__(self, soundPath, textgridPath):

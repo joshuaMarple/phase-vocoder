@@ -4,11 +4,10 @@ from sys import platform as _platform
 
 def changePitch(filename,tones):
   """
-  Input: filename , tones
-  filename (string): the path to the soundfile
-  tones (integer): the number of semitones to change(from negative number to positive number)
-  Outputs: pitchoutput.wav
-  Description: This function will change the pitch of a soundfile
+  Input: n
+  n (integer): the number to do the factorial function on
+  Returns: The value of n!
+  Description: This function will return n!
   """
   pitchchange = "-pitch="+str(tones)
   if _platform == "linux" or _platform == "linux2":
@@ -19,7 +18,13 @@ def changePitch(filename,tones):
     fn = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'soundpitchwin32.exe')
 
   subprocess.call([fn,filename, "pitchoutput.wav","-speech", pitchchange])
+  #self.nsound=SndTable("temp_outvoice.aif")
+  #self.nsound.save("outputfinal.wav", 0, 0)
+  #os.remove( os.path.join(os.path.abspath(os.path.dirname(__file__)), 'temp_outvoice.aif') )
+  #os.remove( os.path.join(os.path.abspath(os.path.dirname(__file__)), 'temp_voice.aif') )
+  #print fn
 
+#changePitch("example.wav", 4)
 
 
 
