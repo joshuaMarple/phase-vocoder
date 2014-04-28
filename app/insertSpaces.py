@@ -1,4 +1,4 @@
-import lib.pydub
+from lib import pydub
 
 def insertSilence(filename, gaptime, gaplength):
 	import pydub

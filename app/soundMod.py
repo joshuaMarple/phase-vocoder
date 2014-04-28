@@ -1,4 +1,4 @@
-import lib.pydub
+from lib import pydub
 
 def changeVolume(filename, decibel):
     import pydub
