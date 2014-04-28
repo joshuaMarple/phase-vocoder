@@ -42,7 +42,7 @@ class Sound:
         pass this one. It will call pitchMod that is
         defined in pitchMod.py
         '''
-        pass
+        changeGapPitch(self.soundPath, startTime, length, shift)
 
     def intensityMod(self, startTime, length, decibels):
         '''
