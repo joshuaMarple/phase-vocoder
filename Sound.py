@@ -9,14 +9,17 @@ class Sound:
         self.textgrid = tgt.read_textgrid(textgridPath)
     def pauseInsertion(self, index, duration):
         """
-        This will get the time of the end of the word from
-        the textgrid file, insert the silence at that point
-        in the wave file using insertSpaces, and rewrite
-        the textgrid file to reflect the change.
+        Input: index, duration
+        index(Int): The index of the word to add time before
+        duration(float): The duration of the silence to insert
+        Description: Inserts silence before a word at the given index
         """
         wordTier = self.textgrid.get_tier_by_name('words')
-        wordIntervals = filter(lambda x: x.text != "sil" and x.text != "sp", wordTier)
-        silenceStart = wordIntervals[index].end_time
+        if index == 0:
+            silenceStart = 0
+        else:
+            wordIntervals = filter(lambda x: x.text != "sil" and x.text != "sp", wordTier)
+            silenceStart = wordIntervals[index-1].end_time
         
         # insert silence into wave
         insertSpaces.insertSilence(self.soundPath, silenceStart, duration)
@@ -61,7 +64,6 @@ class Sound:
         Description: Changes the duration of a sound file whithout changing the pitch
         '''
         durMod.changeDuration(self.soundPath,percentage)
-        pass
 
 if __name__ == "__main__":
     s = Sound("example.wav", "example.TextGrid")
