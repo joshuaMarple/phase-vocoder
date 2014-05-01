@@ -1,8 +1,7 @@
 from app import insertSpaces
-from app import pitchMod
-from app import durMod
-# from app import soundMod
-from app import changeVolume
+from app import Pitch
+from app import Duration
+from app import Volume
 from lib import tgt
 
 class Sound:
@@ -40,7 +39,7 @@ class Sound:
         # Save grid
         tgt.write_to_file(self.textgrid, self.textgridPath, format = "long")
 
-    def pitchMod(self, startTime, length, shift):
+    def changePitch(self, startTime, length, shift):
         '''
         Input: startTime,length,shift
         startTime(Float): the beginning of the sound interval to have its pitch changed (in seconds)
@@ -48,7 +47,7 @@ class Sound:
         shift (integer): the amount of semitones to change the pitch (can be a positive number [to make pitch higher] or a negative number[to make pitch lower])
         Description: Changes the pitch of a sound without changing its duration
         '''
-        pitchMod.changeGapPitch(self.soundPath,startTime,length,shift)
+        Pitch.changeGapPitch(self.soundPath,startTime,length,shift)
 
     def intensityMod(self, startTime, length, decibels):
         '''
@@ -58,9 +57,9 @@ class Sound:
         decibels(Float): the number of decibels to increase the volume by (or decrease if negative)
         Description: Changes the volume of an interval of a sound file
         '''
-        changeVolume.changeVolume(self.soundPath, startTime, length, decibels)
+        Volume.changeVolume(self.soundPath, startTime, length, decibels)
 
-    def durMod(self, startTime, length, percentage):
+    def changeDuration(self, startTime, length, percentage):
         '''
         Input: percentage
         startTime(Float): the beginning of the sound interval to have its tempo(and duration) changed (in seconds)
@@ -68,7 +67,7 @@ class Sound:
         percentage (float) : Changes the tempo of a sound file based in a percentage where -50 % increases the sound time and 50% diminishes (a faster/bigger tempo diminishes sound time, a smaller/slower tempo increases sound time) 
         Description: Changes the tempo of a sound file, consequently changing its duration whithout changing the pitch
         '''
-        # durMod.changeGapDuration(self.soundPath, startTime, length, percentage)
+        Duration.changeGapDuration(self.soundPath, startTime, length, percentage)
   
         # Adjust time in textgrid
         for tier in self.textgrid:
@@ -104,8 +103,8 @@ if __name__ == "__main__":
     print("insert space at second 1, for one second")
     s.pauseInsertion(1,1)
     print("change pitch up 12 semitones at 2 seconds")
-#    s.pitchMod(0, .5, 12)
+    s.changePitch(0, 2, 12)
     print("change volume up 12 decibels at .5 seconds")
     s.intensityMod(.5, .5, 12)
     print("change tempo of first .5 seconds up 50%")
-    s.durMod(0, .5, 50)
+    s.changeDuration(0, 1, 50)
