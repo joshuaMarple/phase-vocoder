@@ -1,7 +1,6 @@
 from lib import pydub
 
 def changeVolume(filename, gaptime, gaplength, decibel):
-    import pydub
     file = pydub.AudioSegment.from_wav(filename)
     segment = file[:int(gaplength * 1000)]
     segment = segment + decibel
