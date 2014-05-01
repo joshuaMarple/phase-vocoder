@@ -1,7 +1,7 @@
 from app import insertSpaces
 from app import pitchMod
 from app import durMod
-from app import soundMod
+# from app import soundMod
 from app import changeVolume
 from lib import tgt
 
@@ -49,7 +49,6 @@ class Sound:
         Description: Changes the pitch of a sound without changing its duration
         '''
         pitchMod.changeGapPitch(self.soundPath,startTime,length,shift)
-        pass
 
     def intensityMod(self, startTime, length, decibels):
         '''
@@ -73,24 +72,28 @@ class Sound:
   
         # Adjust time in textgrid
         for tier in self.textgrid:
-            print("processing tier")
-            # Shift all later intervals
+            print("processing tier \"{}\"".format(tier.name))
             prevEndTime = 0
             for interval in tier:
-                print("processing interval")
-                shift = prevEndTime - interval.start_time
-                interval.start_time += shift
-                interval.end_time += shift
+                print("  interval ({}, {}) ->".format(interval.start_time, interval.end_time))
                 
                 # How much of the sound whose duration is being changed
                 # is in this interval?
                 thisIntervalStart = max(interval.start_time, startTime)
                 thisIntervalEnd = min(interval.end_time, startTime + length)
                 timeThisInterval = thisIntervalEnd - thisIntervalStart
+                print("  time this interval: {}".format(timeThisInterval))
   
                 if timeThisInterval > 0:
                     lengthChange = (timeThisInterval * percentage / 100) - timeThisInterval
                     interval.end_time += lengthChange
+                    print("    length change by {}: ({}, {})".format(lengthChange, interval.start_time, interval.end_time))
+
+                shift = prevEndTime - interval.start_time
+                interval.start_time += shift
+                interval.end_time += shift
+                print("    shift to ({}, {})".format(interval.start_time, interval.end_time))
+
                 prevEndTime = interval.end_time
             
         # Save grid
@@ -98,4 +101,11 @@ class Sound:
       
 if __name__ == "__main__":
     s = Sound("example.wav", "example.TextGrid")
-    s.durMod(1, .5, 50)
+    print("insert space at second 1, for one second")
+#    s.pauseInsertion(1,1)
+    print("change pitch up 12 semitones at 2 seconds")
+    s.pitchMod(0, .5, 12)
+    print("change volume up 12 decibels at .5 seconds")
+ #   s.intensityMod(.5, .5, 12)
+    print("change tempo of first .5 seconds up 50%")
+  #  s.durMod(0, .5, 50)

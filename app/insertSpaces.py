@@ -1,7 +1,6 @@
 from lib import pydub
 
 def insertSilence(filename, gaptime, gaplength):
-	import pydub
 	file = pydub.AudioSegment.from_wav(filename)
 	silence = file[:int(gaplength * 1000)]
 	silence = silence - 50000
