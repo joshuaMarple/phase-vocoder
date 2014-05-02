@@ -1,3 +1,11 @@
+""" 
+Authors: Fernando (UPDATE HIS INFO)
+License: GPL 3.0
+Description: This file contains functions that allows the user to 
+change the pitch of a .wav 
+Comments: None.
+"""
+
 import subprocess
 import os
 from sys import platform as _platform

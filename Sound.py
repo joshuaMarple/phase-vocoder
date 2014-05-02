@@ -6,6 +6,12 @@ from lib import tgt
 
 class Sound:
     def __init__(self, soundPath, textgridPath):
+	"""
+	Input: soundPath, textgridPath
+	soundPath(string): The path of the .wav file
+	textgridPath(string): The path to the textgrid file
+	Description: Constructor for Sound class. Takes in a .wav and .textGrid file
+	"""
         self.soundPath = soundPath
         self.textgrid = tgt.read_textgrid(textgridPath)
         self.textgridPath = textgridPath
@@ -64,7 +70,7 @@ class Sound:
         Input: percentage
         startTime(Float): the beginning of the sound interval to have its tempo(and duration) changed (in seconds)
         length (float): the size of the interval to be changed (in seconds)
-        percentage (float) : Changes the tempo of a sound file based in a percentage where -50 % increases the sound time and 50% diminishes (a faster/bigger tempo diminishes sound time, a smaller/slower tempo increases sound time) 
+        percentage (float) : Changes the tempo of a sound file based in a percentage where -50 % increases the sound time and 50% diminishes (a faster/bigger tempo diminishes sound time, a smaller/slower 		tempo increases sound time) 
         Description: Changes the tempo of a sound file, consequently changing its duration whithout changing the pitch
         '''
         Duration.changeGapDuration(self.soundPath, startTime, length, percentage)
