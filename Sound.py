@@ -17,8 +17,13 @@ class Sound:
         self.textgrid = tgt.read_textgrid(textgridPath)
         self.textgridPath = textgridPath
         self.file = pydub.AudioSegment.from_wav(self.soundPath)
-        self.file.export("backup_last.wav", format="wav")
-
+        
+        backup = "backup_" + self
+	iter = 0
+	while not(backup.file.exists()):
+    		iter +=1
+    		backup = "backup"+iter+"_"+self
+	backup.file.export(backup, format = "wav")
   
   
     def pauseInsertion(self, index, duration):
