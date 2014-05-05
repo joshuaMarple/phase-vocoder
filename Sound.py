@@ -4,6 +4,10 @@ from app import Duration
 from app import Volume
 from lib import tgt
 from lib import pydub
+import datetime
+
+
+
 
 class Sound:
     def __init__(self, soundPath, textgridPath):
@@ -18,12 +22,12 @@ class Sound:
         self.textgridPath = textgridPath
         self.file = pydub.AudioSegment.from_wav(self.soundPath)
         
-        backup = "backup_" + self
-	iter = 0
-	while not(backup.file.exists()):
-    		iter +=1
-    		backup = "backup"+iter+"_"+self
-	backup.file.export(backup, format = "wav")
+        backup = "backup_" + datetime.datetime.now().strftime("%I:%M%p on %B %d %Y")+".wav"
+	#iter = 0
+	#while not(backup.file.exists()):
+    	#	iter +=1
+    	#	backup = "backup"+iter+"_"+self
+	self.file.export(backup, format = "wav")
   
   
     def pauseInsertion(self, index, duration):
