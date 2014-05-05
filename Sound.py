@@ -3,6 +3,7 @@ from app import Pitch
 from app import Duration
 from app import Volume
 from lib import tgt
+from lib import pydub
 
 class Sound:
     def __init__(self, soundPath, textgridPath):
@@ -15,6 +16,11 @@ class Sound:
         self.soundPath = soundPath
         self.textgrid = tgt.read_textgrid(textgridPath)
         self.textgridPath = textgridPath
+        self.file = pydub.AudioSegment.from_wav(self.soundPath)
+        self.file.export("backup_last.wav", format="wav")
+
+  
+  
     def pauseInsertion(self, index, duration):
         """
         Input: index, duration
@@ -55,7 +61,7 @@ class Sound:
         '''
         Pitch.changeGapPitch(self.soundPath,startTime,length,shift)
 
-    def intensityMod(self, startTime, length, decibels):
+    def changeVolume(self, startTime, length, decibels):
         '''
         Input: startTime, length, decibels
         startTime(Float): the beginning of the sound interval to have its volume changed (in seconds)
@@ -111,6 +117,6 @@ if __name__ == "__main__":
     print("change pitch up 12 semitones at 2 seconds")
     s.changePitch(0, 2, 12)
     print("change volume up 12 decibels at .5 seconds")
-    s.intensityMod(.5, .5, 12)
+    s.changeVolume(.5, .5, 12)
     print("change tempo of first .5 seconds up 50%")
     s.changeDuration(0, 1, 50)

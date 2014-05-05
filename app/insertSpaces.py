@@ -9,15 +9,14 @@ Comments: None.
 from lib import pydub
 
 
-  """
-  Input: filename , gaptime, gaplength, 
-  filename (string): the path to the soundfile
-  gaptime (float): the time to begin inserting silence
-  gapduration (float): the amount of time that sound will be changed(from the gaptime start to the end of this length) 
-  Outputs: processefile.wav
-  Description: This function will insert silence into a .wav file 
-  """
-
+"""
+Input: filename , gaptime, gaplength, 
+filename (string): the path to the soundfile
+gaptime (float): the time to begin inserting silence
+gapduration (float): the amount of time that sound will be changed(from the gaptime start to the end of this length) 
+Outputs: processefile.wav
+Description: This function will insert silence into a .wav file 
+"""
 def insertSilence(filename, gaptime, gaplength):
 	file = pydub.AudioSegment.from_wav(filename)
 	silence = file[:int(gaplength * 1000)]
@@ -25,5 +24,5 @@ def insertSilence(filename, gaptime, gaplength):
 	first = file[:int(gaptime * 1000)]
 	last = file[int(gaptime * 1000):]
 	newfile = first + silence + last
-	newfile.export("processedfile.wav", format="wav")
+	newfile.export(filename, format="wav")
 	return newfile
