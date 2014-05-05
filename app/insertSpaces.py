@@ -25,4 +25,3 @@ def insertSilence(filename, gaptime, gaplength):
 	last = file[int(gaptime * 1000):]
 	newfile = first + silence + last
 	newfile.export(filename, format="wav")
-	return newfile

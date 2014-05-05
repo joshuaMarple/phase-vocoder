@@ -59,7 +59,7 @@ class Sound:
         shift (integer): the amount of semitones to change the pitch (can be a positive number [to make pitch higher] or a negative number[to make pitch lower])
         Description: Changes the pitch of a sound without changing its duration
         '''
-        Pitch.changeGapPitch(self.soundPath,startTime,length,shift)
+#        Pitch.changeGapPitch(self.soundPath,startTime,length,shift)
 
     def changeVolume(self, startTime, length, decibels):
         '''
@@ -71,44 +71,49 @@ class Sound:
         '''
         Volume.changeVolume(self.soundPath, startTime, length, decibels)
 
-    def changeDuration(self, startTime, length, percentage):
+    def changeDuration(self, startTime, length, newLength):
         '''
-        Input: percentage
-        startTime(Float): the beginning of the sound interval to have its tempo(and duration) changed (in seconds)
+        Input: 
+        startTime(Float): the beginning of the sound interval to have its duration changed (in seconds)
         length (float): the size of the interval to be changed (in seconds)
-        percentage (float) : Changes the tempo of a sound file based in a percentage where -50 % increases the sound time and 50% diminishes (a faster/bigger tempo diminishes sound time, a smaller/slower 		tempo increases sound time) 
-        Description: Changes the tempo of a sound file, consequently changing its duration whithout changing the pitch
+        newLength (float) : the size of the interval after changing its duration
+        Description: Changes the duration of part of a sound file
         '''
-        Duration.changeGapDuration(self.soundPath, startTime, length, percentage)
+        timeScale = newLength / length
+        percentTempoChange = 100 / timeScale
+        Duration.changeGapDuration(self.soundPath, startTime, length, percentTempoChange)
   
+        # print("change duration at {} for {} seconds to {} seconds.".format(startTime, length, newLength))
         # Adjust time in textgrid
         for tier in self.textgrid:
-            print("processing tier \"{}\"".format(tier.name))
+            # print("processing tier \"{}\"".format(tier.name))
             prevEndTime = 0
             for interval in tier:
-                print("  interval ({}, {}) ->".format(interval.start_time, interval.end_time))
+                # print("  interval ({}, {}) ->".format(interval.start_time, interval.end_time))
                 
                 # How much of the sound whose duration is being changed
                 # is in this interval?
                 thisIntervalStart = max(interval.start_time, startTime)
                 thisIntervalEnd = min(interval.end_time, startTime + length)
                 timeThisInterval = thisIntervalEnd - thisIntervalStart
-                print("  time this interval: {}".format(timeThisInterval))
+                # print("  time this interval: {}".format(timeThisInterval))
   
                 if timeThisInterval > 0:
-                    lengthChange = (timeThisInterval * percentage / 100) - timeThisInterval
+                    lengthChange = (timeThisInterval * timeScale) - timeThisInterval
                     interval.end_time += lengthChange
-                    print("    length change by {}: ({}, {})".format(lengthChange, interval.start_time, interval.end_time))
+                    # print("    length change by {}: ({}, {})".format(lengthChange, interval.start_time, interval.end_time))
 
                 shift = prevEndTime - interval.start_time
-                interval.start_time += shift
                 interval.end_time += shift
-                print("    shift to ({}, {})".format(interval.start_time, interval.end_time))
+                interval.start_time += shift
+                # print("    shift time: {}".format(shift))
+                # print("    shift to ({}, {})".format(interval.start_time, interval.end_time))
 
                 prevEndTime = interval.end_time
             
         # Save grid
-        tgt.write_to_file(self.textgrid, "out.TextGrid", format = "long")
+        tgt.write_to_file(self.textgrid, self.textgrid, format = "long")
+
       
 if __name__ == "__main__":
     s = Sound("example.wav", "example.TextGrid")
@@ -119,4 +124,4 @@ if __name__ == "__main__":
     print("change volume up 12 decibels at .5 seconds")
     s.changeVolume(.5, .5, 12)
     print("change tempo of first .5 seconds up 50%")
-    s.changeDuration(0, 1, 50)
+    s.changeDuration(0, 1, 2)

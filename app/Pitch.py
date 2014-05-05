@@ -28,9 +28,6 @@ def changePitch(filename,tones):
     fn = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'soundpitchwin32.exe')
 
   subprocess.call([fn,filename, "pitchoutput.wav","-speech", pitchchange])
-  
-  return "pitchoutput.wav"
-
  
 def changeGapPitch(filename,gaptime,gaplength,tones):
   """
@@ -39,7 +36,7 @@ def changeGapPitch(filename,gaptime,gaplength,tones):
   gaptime (float): the time to begin changing the pitch
   gaplength(float): the amount of sound to be changed(from the gaptime start to the end of this length)
   tones (integer): the number of semitones to change(from negative number to positive number) 
-  Outputs: processefile.wav
+  Outputs: path given by filename
   Description: This function will change the pitch of a soundfile
   """
   file = pydub.AudioSegment.from_wav(filename)
@@ -54,8 +51,3 @@ def changeGapPitch(filename,gaptime,gaplength,tones):
   
   os.remove("pitchinput.wav")
   os.remove("pitchoutput.wav")
-
-
-
-
-

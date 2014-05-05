@@ -14,7 +14,7 @@ filename (string): the path to the soundfile
 gaptime (float): the time to begin changing the volume
 gapduration (float): the amount of time that sound will be changed(from the gaptime start to the end of this length)
 decibel (integer): the number of decibels to chang ethe volume by(from negative number to positive number) 
-Outputs: processefile.wav
+Outputs: saves results to the path given by filename
 Description: This function will change the volume of a soundfile
 """
 
@@ -26,4 +26,3 @@ def changeVolume(filename, gaptime, gaplength, decibel):
     last = file[int(gaptime * 1000):]
     newfile = first + segment + last
     newfile.export(filename, format="wav")
-    return newfile
