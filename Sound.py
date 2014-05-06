@@ -68,7 +68,7 @@ class Sound:
         shift (integer): the amount of semitones to change the pitch (can be a positive number [to make pitch higher] or a negative number[to make pitch lower])
         Description: Changes the pitch of a sound without changing its duration
         '''
-#        Pitch.changeGapPitch(self.soundPath,startTime,length,shift)
+        Pitch.changeGapPitch(self.soundPath,startTime,length,shift)
 
     def changeVolume(self, startTime, length, decibels):
         '''
@@ -129,7 +129,7 @@ if __name__ == "__main__":
     print("insert space at second 1, for one second")
     s.pauseInsertion(1,1)
     print("change pitch up 12 semitones at 2 seconds")
-    s.changePitch(0, 2, 12)
+    s.changePitch(0, 4, 12)
     print("change volume up 12 decibels at .5 seconds")
     s.changeVolume(.5, .5, 12)
     print("change tempo of first .5 seconds up 50%")
