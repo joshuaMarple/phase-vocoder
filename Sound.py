@@ -5,29 +5,26 @@ from app import Volume
 from lib import tgt
 from lib import pydub
 import datetime
+import shutil
 
 
-
+wavbackup = "wav_backup_" + datetime.datetime.now().strftime("%I%M%p_%B%d%Y") + ".wav"
+tgtbackup = "tgt_backup_" + datetime.datetime.now().strftime("%I%M%p_%B%d%Y") + ".TextGrid"
 
 class Sound:
     def __init__(self, soundPath, textgridPath):
-	"""
-	Input: soundPath, textgridPath
-	soundPath(string): The path of the .wav file
-	textgridPath(string): The path to the textgrid file
-	Description: Constructor for Sound class. Takes in a .wav and .textGrid file
-	"""
+        """
+        Input: soundPath, textgridPath
+        soundPath(string): The path of the .wav file
+        textgridPath(string): The path to the textgrid file
+        Description: Constructor for Sound class. Takes in a .wav and .textGrid file
+        """
         self.soundPath = soundPath
         self.textgrid = tgt.read_textgrid(textgridPath)
         self.textgridPath = textgridPath
         self.file = pydub.AudioSegment.from_wav(self.soundPath)
-        
-        backup = "backup_" + datetime.datetime.now().strftime("%I:%M%p on %B %d %Y")+".wav"
-	#iter = 0
-	#while not(backup.file.exists()):
-    	#	iter +=1
-    	#	backup = "backup"+iter+"_"+self
-	self.file.export(backup, format = "wav")
+
+        shutil.copyfile(soundPath, wavbackup)
   
   
     def pauseInsertion(self, index, duration):
@@ -41,10 +38,10 @@ class Sound:
         if index == 0:
             silenceStart = 0
         else:
-            wordIntervals = filter(lambda x: x.text != "sil" and x.text != "sp", wordTier)
+            wordIntervals = list(filter(lambda x: x.text != "sil" and x.text != "sp", wordTier))
             silenceStart = wordIntervals[index-1].end_time
         
-        # insert silence into wave
+        # insert silence into wav
         insertSpaces.insertSilence(self.soundPath, silenceStart, duration)
         
         # insert silence into textgrid
@@ -69,6 +66,7 @@ class Sound:
         Description: Changes the pitch of a sound without changing its duration
         '''
         Pitch.changeGapPitch(self.soundPath,startTime,length,shift)
+        # text grid unaffected, no changes necessary
 
     def changeVolume(self, startTime, length, decibels):
         '''
@@ -79,6 +77,7 @@ class Sound:
         Description: Changes the volume of an interval of a sound file
         '''
         Volume.changeVolume(self.soundPath, startTime, length, decibels)
+        # text grid unaffected, no changes necessary
 
     def changeDuration(self, startTime, length, newLength):
         '''
@@ -92,37 +91,28 @@ class Sound:
         percentTempoChange = 100 / timeScale
         Duration.changeGapDuration(self.soundPath, startTime, length, percentTempoChange)
   
-        # print("change duration at {} for {} seconds to {} seconds.".format(startTime, length, newLength))
         # Adjust time in textgrid
         for tier in self.textgrid:
-            # print("processing tier \"{}\"".format(tier.name))
             prevEndTime = 0
             for interval in tier:
-                # print("  interval ({}, {}) ->".format(interval.start_time, interval.end_time))
-                
                 # How much of the sound whose duration is being changed
                 # is in this interval?
                 thisIntervalStart = max(interval.start_time, startTime)
                 thisIntervalEnd = min(interval.end_time, startTime + length)
                 timeThisInterval = thisIntervalEnd - thisIntervalStart
-                # print("  time this interval: {}".format(timeThisInterval))
   
                 if timeThisInterval > 0:
                     lengthChange = (timeThisInterval * timeScale) - timeThisInterval
                     interval.end_time += lengthChange
-                    # print("    length change by {}: ({}, {})".format(lengthChange, interval.start_time, interval.end_time))
 
                 shift = prevEndTime - interval.start_time
                 interval.end_time += shift
                 interval.start_time += shift
-                # print("    shift time: {}".format(shift))
-                # print("    shift to ({}, {})".format(interval.start_time, interval.end_time))
 
                 prevEndTime = interval.end_time
             
         # Save grid
-        tgt.write_to_file(self.textgrid, self.textgrid, format = "long")
-
+        tgt.write_to_file(self.textgrid, tgtbackup, format = "long")
       
 if __name__ == "__main__":
     s = Sound("example.wav", "example.TextGrid")

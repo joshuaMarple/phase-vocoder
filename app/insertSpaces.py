@@ -20,7 +20,7 @@ Description: This function will insert silence into a .wav file
 def insertSilence(filename, gaptime, gaplength):
 	file = pydub.AudioSegment.from_wav(filename)
 	silence = file[:int(gaplength * 1000)]
-	silence = silence - 50000
+	silence = silence - 50000 # arbitrary number, makes it very very quiet
 	first = file[:int(gaptime * 1000)]
 	last = file[int(gaptime * 1000):]
 	newfile = first + silence + last
