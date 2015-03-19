@@ -7,9 +7,8 @@ from lib import pydub
 import datetime
 import shutil
 
-
-wavbackup = "wav_backup_" + datetime.datetime.now().strftime("%I%M%p_%B%d%Y") + ".wav"
-tgtbackup = "tgt_backup_" + datetime.datetime.now().strftime("%I%M%p_%B%d%Y") + ".TextGrid"
+wavmodified = "wav_modified_" + datetime.datetime.now().strftime("%I%M%p_%B%d%Y") + ".wav"
+tgtmodified = "tgt_modified_" + datetime.datetime.now().strftime("%I%M%p_%B%d%Y") + ".TextGrid"
 
 class Sound:
     def __init__(self, soundPath, textgridPath):
@@ -20,13 +19,16 @@ class Sound:
         Description: Constructor for Sound class. Takes in a .wav and .textGrid file
         """
         self.soundPath = soundPath
-        self.textgrid = tgt.read_textgrid(textgridPath)
         self.textgridPath = textgridPath
-        self.file = pydub.AudioSegment.from_wav(self.soundPath)
 
-        shutil.copyfile(soundPath, wavbackup)
+        shutil.copyfile(soundPath, wavmodified)
+        shutil.copyfile(textgridPath, tgtmodified)
+        self.soundPath = wavmodified
+        self.textgridPath = tgtmodified
   
-  
+        self.file = pydub.AudioSegment.from_wav(self.soundPath)
+        self.textgrid = tgt.read_textgrid(textgridPath)
+        
     def pauseInsertion(self, index, duration):
         """
         Input: index, duration
@@ -112,7 +114,7 @@ class Sound:
                 prevEndTime = interval.end_time
             
         # Save grid
-        tgt.write_to_file(self.textgrid, tgtbackup, format = "long")
+        tgt.write_to_file(self.textgrid, self.textgridPath, format = "long")
       
 if __name__ == "__main__":
     s = Sound("example.wav", "example.TextGrid")
